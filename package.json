@@ -1,0 +1,8 @@
+{
+  "name": "balance",
+  "version": "0.0.1",
+  "dependencies": {
+    "lodash": "^4.17.11",
+    "numeric": "^1.2.6"
+  }
+}
