@@ -175,7 +175,7 @@ console.log('\n\nmartix L:');
 printMatrix(matrixL);
 
 console.log('\n\nvector U2:');
-console.log(U2);
+console.log(normU2);
 
 console.log('\n\ngroup1:');
 console.log(group1);
