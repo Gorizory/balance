@@ -3,7 +3,7 @@ const numeric = require('numeric');
 
 function printMatrix(matrix) {
     let string = '   ';
-    vertexes.forEach((vertex, i) => {
+    vertexes.forEach((vertex) => {
         string += vertex / 10 > 1 ? `${vertex} ` : `${vertex}  `
     });
 
@@ -16,6 +16,44 @@ function printMatrix(matrix) {
     });
 
     console.log(string);
+}
+
+function findEigenectors(matrix) {
+    const x = [];
+
+    for (let i = 0; i < matrix.length; i++) {
+        let k;
+
+        for (let j = i; j < matrix.length; j++) {
+            if (j === i) {
+                k = matrix[i][j];
+                matrix[i][j] = 1;
+                continue;
+            }
+            matrix[i][j] /= k;
+        }
+
+        for (let ii = i + 1; ii < matrix.length; ii++) {
+            for (let jj = i; jj < matrix.length; jj++) {
+                if (jj === i) {
+                    k = matrix[ii][jj];
+                }
+                matrix[ii][jj] -= k * matrix[i][jj];
+            }
+        }
+
+        x.push(0);
+    }
+
+    x[matrix.length - 1] = 1;
+
+    for (let i = matrix.length - 2; i >= 0; i--) {
+        for (let j = matrix.length - 1; j > i; j--) {
+            x[i] -= matrix[i][j] * x[j];
+        }
+    }
+
+    return x;
 }
 
 const vertexes = [
@@ -88,31 +126,31 @@ matrixA.forEach((row, j) => {
     })
 });
 
-const eig = numeric.eig(matrixL);
-const eigValues = eig.lambda.x;
-const eigVectors = eig.E.x;
+const eigValue = _.sortBy(numeric.eig(matrixL).lambda.x)[1];
+const U2 = findEigenectors(matrixL.map((row, i) => {
+    return row.map((vertex, j) => {
+        if (i === j) {
+            return vertex - eigValue;
+        }
+        return vertex;
+    });
+}));
 
-const U2 = _.sortBy(eigValues.map((value, i) => ({
-        value,
-        vector: eigVectors[i],
-    })
-), (o) => o.value)[1];
-
-const maxU2 = _.max(U2.vector, (value) => {
+const maxU2 = _.max(U2, (value) => {
     Math.abs(value);
 });
 
-U2.vector = U2.vector.map((value) => {
+const normU2 = U2.map((value) => {
     return value / maxU2;
 });
 
-const _U = _.mean(U2.vector);
+const _U = _.mean(normU2);
 
 const group1 = [];
 const group2 = [];
 let to1group = false;
 
-U2.vector.forEach((value, i) => {
+normU2.forEach((value, i) => {
     if (value < _U) {
         group1.push(vertexes[i]);
     } else if (value > _U) {
