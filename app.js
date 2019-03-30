@@ -18,7 +18,7 @@ function printMatrix(matrix) {
     console.log(string);
 }
 
-function findEigenectors(matrix) {
+function findEigenVectors(matrix) {
     const x = [];
 
     for (let i = 0; i < matrix.length; i++) {
@@ -127,7 +127,7 @@ matrixA.forEach((row, j) => {
 });
 
 const eigValue = _.sortBy(numeric.eig(matrixL).lambda.x)[1];
-const U2 = findEigenectors(matrixL.map((row, i) => {
+const U2 = findEigenVectors(matrixL.map((row, i) => {
     return row.map((vertex, j) => {
         if (i === j) {
             return vertex - eigValue;
